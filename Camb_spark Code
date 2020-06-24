@@ -1,0 +1,1786 @@
+MODULE1 
+
+"""A set of exercises with matplotlib"""
+import matplotlib.pyplot as plt
+import numpy as np
+
+def draw_co2_plot():
+
+    time = [0, 1, 2, 3, 4, 5, 6]
+    co2 = [250, 265, 272, 260, 300, 320, 389]
+    plt.plot(time, co2, '--', color='b')
+    plt.title('CO2 versus time')
+    plt.xlabel('Time (decade)')
+    plt.ylabel('CO2 concentration (ppm)')
+    plt.show()
+
+def draw_equations_plot():
+    fig, ax = plt.subplots(figsize=(8, 6))
+    x = np.linspace(-4, 4, num=50)
+    line1 = ax.plot(x, np.cos(x), '--', color='r')
+    line2 = ax.plot(x, x*x, color='b', linewidth=3)
+    line3 = ax.plot(x, np.exp(-x**2), color='black')
+    ax.legend()
+    ax.set_xlim([-4, 4])
+    ax.set_ylim([0, 2])
+    plt.show()
+
+    """
+    Plot the following lines on the same plot
+
+      y=cos(x) coloured in red with dashed lines
+      y=x^2 coloured in blue with linewidth 3
+      y=exp(-x^2) coloured in black
+
+    Add a legend, title for the x-axis and a title to the curve, the x-axis
+    should range from -4 to 4 (with 50 points) and the y axis should range
+    from 0 to 2. The figure should have a size of 8x6 inches.
+
+    NOTE: Make sure you create the figure at the beginning as doing it at the
+    end will reset any plotting you have done.
+    """
+    
+    
+
+INTRO_NUMPY
+
+   
+ """A set of numpy exercises"""
+import numpy as np
+
+def zero_insert(x):
+
+    if len(x) <= 1:
+        out = x
+    else:
+        out = []
+        for i in range(0, len(x)):
+            out.append(x[i])
+            if i != (len(x)-1):
+                out.append(0)
+                out.append(0)
+                out.append(0)
+                out.append(0)
+        out = np.array(out)
+    return out
+
+
+def return_closest(x, val):
+
+    diff_vector = np.abs(np.array(x) - val)
+    pos = np.argmin(diff_vector)
+    out = x[pos]
+    return out
+
+
+def cauchy(x, y):
+    
+    result = np.zeros((len(x), len(y)))
+    for i in range(0, len(x)):
+        for j in range(0, len(y)):
+            if x[i] == y[j]:
+                raise ValueError
+            result[i][j] = 1/(x[i] - y[j])
+    return result
+
+def most_similar(x, v_list):
+
+    cossim = []
+    for i in range(0, len(v_list)):
+        num = np.dot(x, v_list[i])
+        denom = np.sqrt(np.dot(x,x)) * np.sqrt(np.dot(v_list[i],v_list[i]))
+        cossim.append(float(num)/float(denom))
+    return np.argmax(cossim)
+
+
+def gradient_descent(x_0, learning_rate, tol):
+
+    h = lambda x: (x-1)**2 + np.exp( (-x**2)/2)
+    f = lambda x: np.log(h(x))
+    g = lambda x: (2*(x-1) - x *np.exp((-x**2)/2))/ h(x)
+    
+    x0 = x_0
+    x1 = x_0 - g(x_0) * learning_rate
+    
+    while abs(x1 - x0) > tol:
+        x0 = x1
+        x1 -= g(x0) * learning_rate
+        
+    return (x1, f(x1), np.abs(x1-x0))
+
+
+INTRO_PANDAS
+
+"""A set of pandas exercises"""
+
+def filter_rep(df):
+    return df.drop_duplicates(['A']).reset_index(drop=True)
+
+def subtract_row_mean(df):
+    return df.sub(df.mean(axis=1),axis=0)
+
+MORE_NUMPY
+"""Some exercises that can be done with numpy (but you don't have to)"""
+import numpy as np
+
+def all_unique_chars(string):
+
+    a = len(set(string.lower()))
+    b = len(string)
+    return a == b
+    """
+    Write a function to determine if a string is only made of unique
+    characters and returns True if that's the case, False otherwise.
+    Upper case and lower case should be considered as the same character.
+
+    Example:
+    "qwr#!" --> True, "q Qdf" --> False
+
+    :param string: input string
+    :type string:  string
+    :return:      true or false if string is made of unique characters
+    :rtype:        bool
+    """
+
+    raise NotImplementedError
+
+
+def find_element(sq_mat, val):
+
+    a = np.argwhere(sq_mat == val)
+    if len(a) ==0:
+        raise ValueError
+    else:
+        b = a.tolist()
+        c = [tuple(b[i]) for i in range(0, len(b))]
+        d = set(c)
+        return d
+    """
+    Write a function that takes a square matrix of integers and returns a set of all valid 
+    positions (i,j) of a value. Each position should be returned as a tuple of two
+    integers.
+
+    The matrix is structured in the following way:
+    - each row has strictly decreasing values with the column index increasing
+    - each column has strictly decreasing values with the row index increasing
+    The following matrix is an example:
+
+    Example 1 :
+    mat = [ [10, 7, 5],
+            [ 9, 4, 2],
+            [ 5, 2, 1] ]
+    find_element(mat, 4) --> {(1, 1)}
+
+    Example 2 :
+    mat = [ [10, 7, 5],
+            [ 9, 4, 2],
+            [ 5, 2, 1] ]
+    find_element(mat, 5) --> {(0, 2), (2, 0)} 
+
+    The function should raise an exception ValueError if the value isn't found.
+
+    :param sq_mat: the square input matrix with decreasing rows and columns
+    :type sq_mat:  numpy.array of int
+    :param val:    the value to be found in the matrix
+    :type val:     int
+    :return:       all positions of the value in the matrix
+    :rtype:        set of tuple of int
+    :raise ValueError:
+    """
+
+def filter_matrix(mat):
+
+    i, j = np.where(mat == 0)
+    mat[i, :] =0
+    mat[:, j] =0
+    return mat
+    
+    """
+    Write a function that takes an n x p matrix of integers and sets the rows
+    and columns of every zero-entry to zero.
+
+    Example:
+    [ [1, 2, 3, 1],        [ [0, 2, 0, 1],
+      [5, 2, 0, 2],   -->    [0, 0, 0, 0],
+      [0, 1, 3, 3] ]         [0, 0, 0, 0] ]
+
+    :param mat: input matrix
+    :type mat:  numpy.array of int
+    :return:   a matrix where rows and columns of zero entries in mat are zero
+    :rtype:    numpy.array
+    """
+
+def largest_sum(intlist):
+
+    if len(intlist) == 0:
+        return 0
+    else: 
+        result = []
+        for i in range(1, len(intlist) +1):
+            for j in range(0, len(intlist)- i + 1):
+                result.append(np.sum(intlist[j:j+i]))
+        return result[np.argmax(result)]
+    
+    """
+    Write a function that takes in a list of integers,
+    finds the sublist of contiguous values with at least one
+    element that has the largest sum and returns the sum.
+    If the list is empty, 0 should be returned.
+
+    Example:
+    [-1, 2, 7, -3] --> the sublist with larger sum is [2, 7], the sum is 9.
+
+    :param intlist: input list of integers
+    :type intlist:  list of int
+    :return:       the largest sum
+    :rtype:         int
+    """
+
+
+MODULE 2
+APPLIED_NUMPY
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+import numpy as np
+import pandas as pd
+
+def build_sequences(min_value, max_value, sequence_number):
+    """
+    Write a function that can generate the following sequences:
+        sequence #1: 2 * n + 1
+        sequence #2: 50 - 5 * n
+        sequence #3: 2 ** n
+
+    Although this exercises can easily be done with list
+    comprehensions, it can be more efficient to use numpy
+    (the arange method can be handy here).
+
+    Start by generating all 50 first values for the sequence that
+    was selected by sequence_number and return a numpy array
+    filtered so that it only contains values in
+    [min_value, max_value] (min and max being included)
+
+    :param min_value: minimum value to use to filter the arrays
+    :param max_value: maximum value to use to filter the arrays
+    :param sequence_number: number of the sequence to return
+    :returns: the right sequence as a np.array
+    """
+
+
+    seq_1 = np.arange(1,100, 2)
+    seq_2 = np.arange(50, -200, -5)
+    seq_3 = np.array([2**x for x in range(0,50)])
+    
+    if sequence_number == 1:
+        seq = seq_1
+    elif sequence_number == 2:
+        seq = seq_2
+    elif sequence_number ==3:
+        seq = seq_3
+
+    result = seq[np.logical_and(seq >= min_value, seq <= max_value)]   
+    return result
+
+
+def moving_averages(x, k):
+    """
+    Given a numpy vector x of n > k, compute the moving averages
+    of length k.  In other words, return a vector z of length
+    m = n - k + 1 where z_i = mean([x_i, x_i-1, ..., x_i-k+1])
+
+    Note that z_i refers to value of z computed from index i
+    of x, but not z index i. z will be shifted compared to x
+    since it cannot be computed for the first k-1 values of x.
+
+    Example inputs:
+    - x = [1, 2, 3, 4]
+    - k = 3
+
+    the moving average of 3 is only defined for the last 2
+    values: [3, 4].
+    And z = np.array([mean([1,2,3]), mean([2,3,4])])
+        z = np.array([2.0, 3.0])
+
+    :param x: numpy array of dimension n > k
+    :param k: length of the moving average
+    :returns: a numpy array z containing the moving averages.
+    """
+
+    n = len(x)
+    moving_average = []
+    for i in range(0, n-k+1):
+        mean = np.average(x[0+i:i+k])
+        moving_average.append(mean)
+        
+    result = np.array(moving_average)
+    return result
+
+
+def block_matrix(A, B):
+    """
+    Given two numpy matrices A and B of arbitrary dimensions,
+    return a new numpy matrix of the following form:
+        [A,0]
+        [0,B]
+
+    Example inputs:
+        A = [1,2]    B = [5,6]
+            [3,4]        [7,8]
+
+    Expected output:
+        [1,2,0,0]
+        [3,4,0,0]
+        [0,0,5,6]
+        [0,0,7,8]
+
+    :param A: numpy array
+    :param B: numpy array
+    :returns: a numpy array with A and B on the diagonal.
+    """
+
+    i = A.shape[0]
+    j = A.shape[1]
+    m = B.shape[0]
+    n = B.shape[1]
+    
+    block = np.block([
+            [A , np.zeros((i, n))],
+            [np.zeros((m, j)), B]
+                    ])
+    return block
+
+
+INTRO_EDA
+import pandas as pd
+import numpy as np
+
+def nan_processor(df, replacement_str):
+    result = df[~df.eq(replacement_str).any(axis=1)]
+    result = result.dropna()
+    return result
+    """
+    Take a DataFrame and return one where all occurrences
+    of the replacement string have been replaced by `np.nan`
+    and, subsequently, all rows containing np.nan
+    have been removed.
+
+    Example with replacement_str='blah'
+         A       B      C                   A     B    C
+    --------------------------         ------------------
+    0 |  0.5 |  0.3   | 'blah'         1 | 0.2 | 0.1 | 5
+    1 |  0.2 |  0.1   |   5     -->    3 | 0.7 | 0.2 | 1
+    2 |  0.1 | 'blah' |   3
+    3 |  0.7 |  0.2   |   1
+
+    Note: keep the original index (not reset)
+
+    :param df: Input data frame (pandas.DataFrame)
+    :param replacement_str: string to find and replace by np.nan
+    :returns: DataFrame where the occurences of replacement_str have been
+        replaced by np.nan and subsequently all rows containing np.nan have
+        been removed
+    """
+
+
+
+def feature_cleaner(df, low, high):
+    cleaned = df[np.logical_and(df>df.quantile(low), df<df.quantile(high))]
+    cleaned = cleaned.dropna(axis = 0)
+    std = (cleaned -cleaned.mean(axis=0))/cleaned.std(axis=0)
+    return std
+    """
+    Take a dataframe where columns are all numerical and non-constant.
+    For each feature, mark the values that are not between the given
+    percentiles (low-high) as np.nan. If a value is exactly on the high or low
+    percentile, it should be marked as nan too.
+
+    Then, remove all rows containing np.nan.
+    Finally, the columns must be scaled to have zero mean and unit variance
+    (do this without sklearn).
+
+    Example testdf:
+            0     1     2
+    ---------------------
+    A |   0.1   0.2   0.1
+    B |   5.0  10.0  20.0
+    C |   0.2   0.3   0.5
+    D |   0.3   0.2   0.7
+    E |  -0.1  -0.2  -0.4
+    F |   0.1   0.4   0.3
+    G |  -0.5   0.3  -0.2
+    H | -10.0   0.3   1.0
+
+    Output of feature_cleaner(testdf, 0.01, 0.99):
+
+                0         1         2
+    ---------------------------------
+    A |  0.191663 -0.956183 -0.515339
+    C |  0.511101  0.239046  0.629858
+    D |  0.830540 -0.956183  1.202457
+    F |  0.191663  1.434274  0.057260
+    G | -1.724967  0.239046 -1.374236
+
+    :param df:      Input DataFrame (with numerical columns)
+    :param low:     Lowest percentile  (0.0<low<1.0)
+    :param high:    Highest percentile (low<high<1.0)
+    :returns:       Scaled DataFrame where elements that are outside of the
+                    desired percentile range have been removed
+    """
+
+
+
+def get_feature(df):
+    df_zero = df[df['CLASS'] == 0].drop(columns = ['CLASS'])
+    df_one = df[df['CLASS'] == 1].drop(columns = ['CLASS'])
+    
+    zero = (df_zero.max() - df_zero.min())/(df_zero.std() **2)
+    one = (df_one.max() - df_one.min())/(df_one.std()**2)
+    comp = np.where(zero > one, zero/one , one/zero)
+    maxcol = df.columns[comp.argmax()]
+    return maxcol
+    """
+    Take a dataframe where all columns are numerical (no NaNs) and not constant.
+    One of the column named "CLASS" is either 0 or 1.
+
+    Within each class, for each feature compute the ratio (R) of the
+    range over the variance (the range is the gap between the smallest
+    and largest value).
+
+    For each feature you now have two R; R_0 and R_1 where:
+        R_0 = (max_class0 - min_class0) / variance_class0
+
+    For each column, compute the ratio (say K) of the larger R to the smaller R.
+    Return the name of the column for which this last ratio K is largest.
+
+    Test input
+           A     B     C   CLASS
+    ----------------------------
+    0 |  0.1   0.2   0.1     0
+    1 |  5.0  10.0  20.0     0
+    2 |  0.2   0.3   0.5     1
+    3 |  0.3   0.2   0.7     0
+    4 |	-0.1  -0.2  -0.4     1
+    5 |	 0.1   0.4   0.3     0
+    6 |	-0.5   0.3  -0.2     0
+
+    Expected output: 'C'
+
+    :param df:  Input DataFrame (with numerical columns)
+    :returns:   Name of the column with largest K
+    """
+
+
+
+def one_hot_encode(label_to_encode, labels):
+    encode = []
+    for label in labels:
+        if label_to_encode == label:
+            encode.append(1)
+        else:
+            encode.append(0)
+    return encode
+    """
+    Write a function that takes in a label to encode and a list of possible
+    labels. It should return the label one-hot-encoded as a list of elements
+    containing 0s and a unique 1 at the index corresponding to the matching
+    label. Note that the input list of labels should contain unique elements.
+    If the label does not appear in our known labels, return a list of 0s.
+
+    Examples:
+    one_hot_encode("pink", ["blue", "red", "pink", "yellow"]) -> [0, 0, 1, 0]
+    one_hot_encode("b", ["a", "b", "c", "d", "e"]) -> [0, 1, 0, 0, 0]
+    one_hot_encode("f", ["a", "b", "c", "d", "e"]) -> [0, 0, 0, 0, 0]
+
+    :param label_to_encode: the label to encode
+    :param labels: a list of all possible labels
+    :return: a list of 0s and one 1
+    """
+
+    raise NotImplementedError
+
+
+INTRO_PCA
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+import numpy as np
+import pandas as pd
+
+def get_cumulated_variance(df, scale):
+    if scale is True:
+        scaler = StandardScaler()
+        df = scaler.fit_transform(df)
+    
+    pca = PCA()
+    pca.fit(df)
+    cumsum = np.cumsum(pca.explained_variance_ratio_) * 100
+    cumsum_df = pd.DataFrame(cumsum).transpose()
+    cumsum_df.columns = ['PC' + str(i) for i in range(1,len(cumsum)+1)]
+    return cumsum_df
+    
+    
+def get_coordinates_of_first_two(df, scale):
+    columns = df.columns
+    if scale is True:
+        scaler = StandardScaler()
+        df = scaler.fit_transform(df)
+    pca = PCA()
+    pca.fit(df)
+    pca_df = pd.DataFrame(pca.components_, columns = columns, 
+                          index = ['PC' + str(i) for i in range(1,len(columns)+1)])
+    return pca_df.loc['PC1':'PC2']
+    
+def get_most_important_two(df, scale):
+    columns = df.columns
+    if scale is True:
+        scaler = StandardScaler()
+        df = scaler.fit_transform(df)
+    pca = PCA()
+    pca.fit(df)
+    pc1_abs = np.abs(pca.components_[0])
+    pc_df = pd.DataFrame(pc1_abs,columns)
+    sort = pc_df.sort_values(by =0, ascending = False)
+    sort = sort.reset_index()
+    top2 = (sort['index'][0], sort['index'][1])
+    return top2
+    
+def distance_in_n_dimensions(df, point_a, point_b, n, scale):
+    points = np.array([point_a, point_b])
+    if scale is True:
+        scaler = StandardScaler()
+        df = scaler.fit_transform(df)
+        points = scaler.transform(points) 
+    pca = PCA(n_components = n)
+    pca.fit(df)
+    transformed = pca.transform(points)
+    diff = transformed[1] - transformed[0]
+    dist = np.sqrt(np.sum(diff**2))
+    return dist
+
+def find_outliers_pca(df, n, scale):
+    df_unscaled = df
+    columns = df.columns
+    index = df.index
+    if scale is True:
+        scaler = StandardScaler()
+        df = scaler.fit_transform(df)
+        df = pd.DataFrame(df, columns = columns, index = index)
+    pca = PCA()
+    pca.fit(df)
+    coord = pca.fit_transform(df)
+    projected = pd.DataFrame(coord)[0]
+    mean = np.average(projected)
+    stdev = np.std(projected) 
+    threshold = mean + (stdev * n)
+    outlier_index = np.where(abs(projected) > threshold)
+    outlier = df_unscaled.iloc[outlier_index]
+    return outlier
+
+MORE_PANDAS
+"""This exercise contains functions where you need to use pandas to build new columns from existing ones."""
+import pandas as pd
+import numpy as np
+
+def diff_in_days(df):
+    df['time_1'] = pd.to_datetime(df['time_1'], unit = 's')
+    df['time_2'] = pd.to_datetime(df['time_2'], unit = 's')
+    
+    difference_days = np.abs(df['time_2'] - df['time_1'])
+    difference_days = difference_days.dt.days
+    df_diff = pd.DataFrame(difference_days, columns = ['difference_days'])
+    
+    return df_diff
+    """
+    Write a function that takes a pandas DataFrame with two columns "time_1"
+    and "time_2" of UNIX timestamps given in seconds (you will need to specify
+    the unit if using pd.to_datetime).
+
+    The function should return a new dataFrame with one single column
+    "difference_days" consisting of the absolute difference in days between
+    time_1 and time_2.
+
+    Example input:
+
+               time_1      time_2
+        0  1456694829  1455845363
+
+    Here we have a single row for which time_1 corresponds to 28/02/2016 and
+    time_2 to 19/02/2016.
+
+    Expected output:
+           difference_days
+        0                9
+
+    Note:
+    https://en.wikipedia.org/wiki/Unix_time,
+    https://pandas.pydata.org/pandas-docs/stable/generated/pandas.to_datetime.html
+
+    Hint:
+    Take special care on how negative timedeltas are treated in Python.
+    Getting the number of days directly from a negative timedelta might
+    not give you the result you expect.
+
+    :param df: DataFrame with the two columns of timestamps
+    :return: new dataframe with differences in days between timestamps
+    """
+
+
+
+def return_location(df):
+    import json
+    df.locations = df.locations.apply(json.loads)
+    short_name = []
+    for i in range(0,len(df.locations)):
+        name = df.locations[i]['short_name']
+        short_name.append(name)
+    df_short_name = pd.DataFrame(short_name)
+    df_short_name.columns = ['short_name']
+    return df_short_name
+    """
+    Write a function that takes a pandas DataFrame with one column, locations,
+    containing information about a specific location. The info is stored in a string
+    that can be loaded as a json object.
+    The function should return a DataFrame with one column, "short_name" that contains the
+    value associated with the key "short_name" for each row.
+
+    Note: you can assume all strings are exactly in the format given below though
+    possibly longer and with different keys.
+
+    Example input:
+                                              locations
+        0  {"short_name": "Detroit, MI", "id": 2391585}
+        1    {"short_name": "Tracy, CA", "id": 2507550}
+
+    Where each value is a string such as:
+       '{"short_name": "Detroit, MI", "id": 2391585}'
+
+    Expected output:
+            short_name
+        0  Detroit, MI
+        1    Tracy, CA
+
+    Hint: you might want to use json.loads from the json library
+    together with .apply from pandas to extract the correct key from
+    the json object.
+
+    :param df: DataFrame with the locations column
+    :return: new DataFrame with the short_name column
+    """
+
+
+
+def return_post_codes(df):
+    import re
+    find = lambda s:re.findall(r'[A-Z]{1,2}[0-9R][0-9A-Z]?\s*[0-9][A-Z]{2}', s)
+    postcode_list = df.text.apply(find)
+    
+    reformat = lambda l: ' | '.join(l)
+    
+    reformat_postcode = postcode_list.apply(reformat)
+    
+    postcode_df = pd.DataFrame(reformat_postcode)
+    postcode_df.columns = ['postcodes']
+    return postcode_df
+    """
+    Write a function that takes a pandas DataFrame with one column, text, that
+    contains an arbitrary text. The function should extract all post-codes that
+    appear in that text and concatenate them together with " | ". The result is
+    a new dataframe with a column "postcodes" that contains all concatenated
+    postcodes.
+
+    Example input:
+                                                                            text
+    0  Great Doddington, Wellingborough NN29 7TA, UK\nTaylor, Leeds LS14 6JA, UK
+    1  This is some text, and here is a postcode CB4 9NE
+
+    Expected output:
+
+                postcodes
+    0  NN29 7TA | LS14 6JA
+    1              CB4 9NE
+
+    Note: Postcodes, in the UK, are of one of the following form where `X` means
+    a letter appears and `9` means a number appears:
+
+    X9 9XX
+    X9X 9XX
+    X99 9XX
+    XX9 9XX
+    XX9X 9XX
+    XX99 9XX
+
+    Even though the standard layout is to include one single space
+    in between the two halves of the post code, there are occasional formating
+    errors where an arbitrary number of space is included (0, 1, or more). You
+    should parse those codes as well.
+
+    :param df: a DataFrame with the text column
+    :return: new DataFrame with the postcodes column
+    """
+
+PANDAS_AGG
+
+"""
+This exercise contains functions where you need to use pandas to
+apply various data aggregations and transformations.
+"""
+import pandas as pd
+
+def get_prices_for_heaviest_item(inventory):
+    if inventory['in_stock'].sum() == 0:
+        in_stock = pd.Series([])
+    in_stock = inventory[inventory['in_stock'] == True]
+    in_stock = in_stock.sort_values(['category','weight'],
+                          ascending = False).groupby('category').max()
+    #in_stock = in_stock.set_index('category')
+    in_stock = pd.Series(in_stock['price'].tolist(), index = in_stock.index)
+    in_stock = in_stock.sort_values(ascending = False)
+    return in_stock
+    """
+    Write a function that takes a pandas.DataFrame with four column: "category", "price", "weight", "in_stock"
+    and returns a pandas.Series containing the price of the heaviest weight per category of items still in stock.
+    You can assume that no items in the same category have the same weight to make things simpler to reason about.
+    The returned Series should not have an index name and the values should be sorted in descending order.
+    You should return an empty Series if there are not items in stock for all categories.
+
+    Example input:
+
+        category      price weight  in_stock
+    0   electronics   400   740     False
+    1   health        5     100     False
+    2   electronics   300   6000    True
+    3   books         20    300     True
+
+
+    Expected output:
+
+    electronics    300
+    books          20
+    dtype: int64
+
+
+    :param inventory: pandas.DataFrame with four column "category", "price", "weight", "in_stock"
+    :return: a pandas.Series with the category as index and the selected prices in descending order
+
+    """
+
+
+
+def reshape_temperature_data(measurements):
+    key = ['Jan-2018', 'Feb-2018', 'Mar-2018', "April-2018", "May-2018", "June-2018"]
+    melted = pd.melt(measurements, id_vars = 'location')
+    melted.columns = ['location','date','value']
+    melted = melted.dropna()
+    melted['date']= pd.Categorical(melted['date'], key)
+    melted = melted.sort_values(['location', 'date'])
+    melted = melted.reset_index(drop=True)
+    return melted
+    """
+    Write a function that takes a pandas.DataFrame with 7 columns:
+     "location", 'Jan-2018', 'Feb-2018', 'Mar-2018', "April-2018", "May-2018", "June-2018".
+    This DataFrame represents temperature measurements in the first two quarter of 2018 for a particular city.
+    This function should return a new DataFrame containing three columns: "location", "Date", "Value"
+    and where each row represents a measurement in particular location at a particular date.
+    The returned pandas.DataFrame should sort the values by location first and then by temperature measurement.
+    It should also drop any missing values and reset the index of the returned DataFrame.
+
+    NOTE: If measurements is empty your function should return and empty dataframe:
+        location       date   value
+
+
+    Example input:
+
+       location  Jan-2018  Feb-2018  Mar-2018  April-2018  May-2018  June-2018
+    0  Brussels         2         3         8        12.0        14         17
+    1     Paris         2         3         9         NaN        15         18
+
+    Expected output:
+
+        location        date  value
+    0   Brussels    Jan-2018    2.0
+    1   Brussels    Feb-2018    3.0
+    2   Brussels    Mar-2018    8.0
+    3   Brussels  April-2018   12.0
+    4   Brussels    May-2018   14.0
+    5   Brussels   June-2018   17.0
+    6      Paris    Jan-2018    2.0
+    7      Paris    Feb-2018    3.0
+    8      Paris    Mar-2018    9.0
+    9      Paris    May-2018   15.0
+    10     Paris   June-2018   18.0
+
+
+    :param measurements: pandas.DataFrame with seven columns:
+    "location", 'Jan-2018', 'Feb-2018', 'Mar-2018', "April-2018", "May-2018", "June-2018"
+    :return: a pandas.DataFrame containing three columns "location", "Date", "Value" with a row
+    for each temperature measurement in a given location. There should be no missing values.
+    """
+
+
+
+def compute_events_matrix_count(events):
+    if len(events) == 0:
+        return pd.Series()
+    else:
+        out = pd.pivot_table(events, index = ['user_id'], 
+                         columns = ['event'], aggfunc = len,
+                         fill_value = 0.0)
+        out = out.astype(float)
+        return out
+    """
+    Write a function that takes a pandas.DataFrame containing 2 columns representing web events for a user:
+    "user_id" and "event".
+    This function should return a new DataFrame where each event value becomes a new column in the returned DataFrame.
+    We expect the columns (events) to be in alphabetical order.
+    
+    For each event value, you need to calculate the count of that particular event for each userid.
+    Missing values should be filled with 0.
+    Effectively, this function calculates the number of occurrence for each event type (columns) for each user (rows).
+    You should return an empty Series if the input DataFrame is empty.
+
+    Example input:
+
+        user_id	event
+    0	1234	click
+    1	4321	click
+    2	1234	click
+    3	1234	play
+    4	4321	play
+    5	3456	pause
+
+    Expected output:
+
+        	click	pause	play
+    1234	2.0	    0.0	    1.0
+    3456	0.0	    1.0	    0.0
+    4321	1.0	    0.0	    1.0
+
+
+    :param events: pandas.DataFrame with two columns: "user_id" and "event"
+    :return: a pandas.DataFrame returning the number of occurrence for each event type (columns) for each user (rows).
+    """
+
+MODULE 3
+
+def preprocess(df):
+    import pandas as pd
+    cols_keep = ['category',
+             'name', 'blurb', 'goal', 'slug', 'disable_communication',
+             'country', 'currency', 'deadline', 'created_at', 'launched_at',
+             'creator', 'state', 'evaluation_set']
+
+    df = df[cols_keep]
+    #df = df.dropna(subset=cols_keep[0:-2])
+    
+    import json
+    df.category = df.category.apply(json.loads)
+    #df.location = df.location.apply(json.loads)
+    category_df = pd.read_json(json.dumps(list(df.category))).reset_index()
+    #location_df = pd.read_json(json.dumps(list(df.location))).reset_index()
+    #json_df = pd.merge(category_df, location_df, left_on='index', right_on='index')
+    df = df.reset_index()
+    df = pd.merge(df, category_df, left_on='index', right_on='index')
+    df['launch_create'] = df['launched_at'] - df['created_at']
+    df['deadline_launch'] = df['deadline'] - df['launched_at']
+    df['name_length'] = df['name_x'].str.len()
+    df['blurb_length'] = df['blurb'].str.len()
+    df.loc[df.name_length.isna(), 'name_length'] = df['name_length'].mean()
+    df.loc[df.blurb_length.isna(), 'blurb_length'] = df['blurb_length'].mean()
+
+    
+    features = ['goal', 'country', 'currency', 'name_y','slug_y',
+            'launch_create', 'deadline_launch', 'name_length',
+            'blurb_length', 'state', 'evaluation_set']
+
+    feature_df = pd.get_dummies(df[features])
+    X = feature_df[feature_df['evaluation_set'] == False].drop(columns=['state'])
+    y = feature_df[feature_df['evaluation_set'] == False]['state']
+    X_eval = feature_df[feature_df['evaluation_set'] == True].drop(columns=['state'])
+
+    """This function takes a dataframe and preprocesses it so it is
+    ready for the training stage.
+
+    The DataFrame contains columns used for training (features)
+    as well as the target column.
+
+    It also contains some rows for which the target column is unknown. 
+    Those are the observations you will need to predict for KATE 
+    to evaluate the performance of your model.
+
+    Here you will need to return the training set: X and y together
+    with the preprocessed evaluation set: X_eval.
+
+    Make sure you return X_eval separately! It needs to contain
+    all the rows for evaluation -- they are marked with the column
+    evaluation_set. You can easily select them with pandas:
+
+         - df.loc[df.evaluation_set]
+
+    For y you can either return a pd.DataFrame with one column or pd.Series.
+
+    :param df: the dataset
+    :type df: pd.DataFrame
+    :return: X, y, X_eval
+    """
+
+    return X, y, X_eval
+
+
+def train(X, y):
+    from sklearn.tree import DecisionTreeClassifier
+    dtc = DecisionTreeClassifier(max_depth=15)
+    dtc.fit(X, y)
+    
+    return dtc
+    """Trains a new model on X and y and returns it.
+
+    :param X: your processed training data
+    :type X: pd.DataFrame
+    :param y: your processed label y
+    :type y: pd.DataFrame with one column or pd.Series
+    :return: a trained model
+    """
+
+
+
+def predict(model, X_test):
+    
+    y_pred = model.predict(X_test)
+    return y_pred
+    """This functions takes your trained model as well 
+    as a processed test dataset and returns predictions.
+
+    On KATE, the processed test dataset will be the X_eval you built
+    in the "preprocess" function. If you're testing your functions locally,
+    you can try to generate predictions using a sample test set of your
+    choice.
+
+    This should return your predictions either as a pd.DataFrame with one column
+    or a pd.Series
+
+    :param model: your trained model
+    :param X_test: a processed test set (on KATE it will be X_eval)
+    :return: y_pred, your predictions
+    """
+
+
+MODULE 4
+import numpy as np
+import pandas as pd
+from statsmodels.tsa.arima_model import ARIMA
+from fbprophet import Prophet
+
+def preprocess(df):
+    # Set day as index
+    #df.set_index(pd.to_datetime(df.day), inplace=True)
+    #df.drop("day", axis=1, inplace=True)
+    df = df.reset_index()
+    df = df.rename(columns={'day': 'ds', 'consumption': 'y'}) 
+    # Save msk to split data later
+    msk_eval = df.evaluation_set
+    df.drop("evaluation_set", axis=1, inplace=True)
+
+    # Split training/test data
+    ts = df[~msk_eval]
+    ts_eval = df[msk_eval]
+
+    return ts, ts_eval
+    """This function takes a dataframe and preprocesses it so it is
+    ready for the training stage.
+
+    The DataFrame contains the time axis and the target column.
+
+    It also contains some rows for which the target column is unknown.
+    Those are the observations you will need to predict for KATE 
+    to evaluate the performance of your model.
+
+    Here you will need to return the training time serie: ts together
+    with the preprocessed evaluation time serie: ts_eval.
+
+    Make sure you return ts_eval separately! It needs to contain
+    all the rows for evaluation -- they are marked with the column
+    evaluation_set. You can easily select them with pandas:
+
+         - df.loc[df.evaluation_set]
+
+
+    :param df: the dataset
+    :type df: pd.DataFrame
+    :return: ts, ts_eval
+    """
+
+
+
+def train(ts):
+    #model = ARIMA(ts, order = (3,1,4))
+    #results = model.fit(disp = 0)
+    
+    prophet_model = Prophet(interval_width=0.95, growth = 'linear', weekly_seasonality = 3,yearly_seasonality=3)
+    results = prophet_model.fit(ts)
+    return results
+    """Trains a new model on ts and returns it.
+
+    :param ts: your processed training time serie
+    :type ts: pd.DataFrame
+    :return: a trained model
+    """
+
+
+
+def predict(model, ts_test):
+    #start = ts_test.index[0]
+    #end = ts_test.index[-1]
+    #preds = model.predict(start = start, end = end)
+    df_dates = model.make_future_dataframe(periods=27, 
+                                                include_history=True)
+
+    model_predictions = model.predict( df_dates )
+    preds = model_predictions[-27:]['yhat']
+    return preds
+    """This functions takes your trained model as well 
+    as a processed test time serie and returns predictions.
+
+    On KATE, the processed testt time serie will be the ts_eval you built
+    in the "preprocess" function. If you're testing your functions locally,
+    you can try to generate predictions using a sample test set of your
+    choice.
+
+    This should return your predictions either as a pd.DataFrame with one column
+    or a pd.Series
+
+    :param model: your trained model
+    :param ts_test: a processed test time serie (on KATE it will be ts_eval)
+    :return: y_pred, your predictions
+    """
+
+
+MODULE 5
+
+PT1_ESSENTIALS
+# Part 1: Essentials
+# NOTE: You don't need to start a sqlite session, just return the correct
+# SQL query as a string
+
+
+def business_ids_count():
+    sql = 'select count(distinct business_id) from businesses'
+    return sql
+    """
+    Write a SQL query that finds the number of business ids in the businesses table
+    :return: a string representing the SQL query
+    :rtype: str
+    """
+
+
+
+def unique_business_names_count():
+    sql = 'select count(distinct name) as [unique restaurant name count] from businesses'
+    return sql
+    """
+    Write a SQL query that finds out how many unique business names are registered
+    with San Francisco Food health investigation organization
+    and name the column as "unique restaurant name count".
+    :return: a string representing the SQL query
+    :rtype: str
+    """
+
+
+
+def first_and_last_investigation():
+    sql = 'select min(date), max(date) from inspections'
+    return sql
+    """
+    Write a SQL query that finds out what is the earliest and latest date
+    a health investigation is recorded in this database.
+    :return: a string representing the SQL query
+    :rtype: str
+    """
+
+
+
+def business_local_owner_count():
+    sql = 'select count(distinct business_id) from businesses where postal_code = owner_zip'
+    return sql
+    """
+    How many businesses are there where their owners live
+    in the same area (postal code/ zip code) as the business is located?
+    :return: a string representing the SQL query
+    :rtype: str
+    """
+
+
+def business_local_owner_reg_count():
+    sql = 'select count(distinct business_id) from businesses where postal_code = owner_zip and business_certificate is not null'
+    return sql
+    """
+    Out of those businesses, how many of them has a registered business certificate?
+    :return: a string representing the SQL query
+    :rtype: str
+    """
+
+PT2_GROUPBY
+# Part 2: GROUP BY
+# NOTE: You don't need to start a sqlite session, just return the correct
+# SQL query as a string
+
+
+def freq_risk_per_violation():
+    sql = 'select risk_category, count(*) from violations group by risk_category'
+    return sql
+    """
+    Find out the distribution of the risk exposure of all the violations reported in the database
+    The first column of the result should 'risk_category' and the second column the count.
+    :return: a string representing the SQL query
+    :rtype: str
+    """
+
+
+
+def freq_risk_per_violation_water():
+    sql = "select risk_category, count(*) from violations where description like ('%water%') group by risk_category order by 2 desc"
+    return sql
+    """
+    Find out the distribution of the risk exposure of all the violations reported in the database
+    that are *water related*. Sort them by frequency from high to low.
+    :return: a string representing the SQL query
+    :rtype: str
+    """
+
+
+def frequency_of_inspections_types():
+    sql = 'select type, count(*) from inspections group by type order by 2 asc'
+    return sql
+    """
+    What types of inspections does the authorities conduct and how often do they occur in general.
+    Calculate the distribution of different types of inspections with their frequency (type, frequency)
+    based on inspections records. Sort them in ascending order based on frequency.
+    :return: a string representing the SQL query
+    :rtype: str
+    """
+
+
+
+def avg_score_by_inspection_type():
+    sql = 'select type, round(avg(Score),1) from inspections where Score is not null group by type order by 2 asc'
+    return sql
+    """
+    What is the average score given to restaurants based on the type of inspection?
+    Based on the results, identify the types of inspections that are not scored (NULL)
+    and remove those categories from the resultset. The 'average_score' should be rounded
+    to one decimal. Sort the results in ascending order based on the average score.
+    Hint: use the function ROUND(score, 1)
+    :return: a string representing the SQL query
+    :rtype: str
+    """
+
+
+
+def owner_per_restaurant_count():
+    sql = 'select owner_name, count(distinct business_id) from businesses group by owner_name order by 2 desc limit 10'
+    return sql
+    """
+    Find the restaurant owners (owner_name) that own one or multiple restaurants in the city
+    with the number of restaurants (num_restaurants) they own.
+    Find the first top 10 owners ordered by descending order using the number of restaurants.
+    :return: a string representing the SQL query
+    :rtype: str
+    """
+
+PT3_SUBQUERIES_JOINS
+# Part 3: Subqueries & Joins
+# NOTE: You don't need to start a sqlite session, just return the correct
+# SQL query as a string
+
+
+def top_postcodes_for_chain_stores():
+    sql ="""
+    select postal_code, count(distinct business_id) from businesses where owner_name in (
+    select distinct owner_name from (
+    SELECT owner_name, count(distinct business_id) as cnt FROM businesses 
+    group by owner_name ) a where cnt >=5 )
+    group by postal_code order by 2 desc limit 10 
+    """
+    return sql
+    """
+    From the businesses table, select the top 10 most popular postal_code.
+    They should be filtered to only count the restaurants owned by people/entities that own 5 or more restaurants.
+    The result should:
+    * return a row (postal_code, frequency) for each 10 selection
+    * sort by descending order to get the most relevant zip codes
+    :return: a string representing the SQL query
+    :rtype: str
+    """
+
+
+def inspection_scores_in_94103():
+    sql = """
+    SELECT min(Score), round(avg(Score),1), max(Score) FROM inspections i
+    left join businesses b on i.business_id = b.business_id
+    where b.postal_code = '94103'
+    """
+    return sql
+    
+    """
+    First let's get an idea about the inspection score our competition has.
+    Based on multiple inspections, find out the minimum Score (as "min_score"),
+    average Score (as "avg_score") and maximum Score (as "max_score") for all restaurant in post code "94103".
+    The average score should be rounded to one decimal.
+    :return: a string representing the SQL query
+    :rtype: str
+    """
+
+
+
+def risk_categories_in_94103():
+    sql = """
+    select risk_category, count(*) from violations v 
+    left join businesses b on b.business_id = v.business_id
+    where postal_code = '94103'
+    group by risk_category order by 2 desc 
+    """
+    return sql
+    """
+    Now lets get more serious, and look at how many times restaurants with postal code 94103
+    (that's Market street) has committed health violations and group them based on their risk category.
+    The output should be (risk_category, count as frequency) and sorted in descending order by frequency
+    :return: a string representing the SQL query
+    :rtype: str
+    """
+
+MODULE 6
+
+def count_elements_in_dataset(dataset):
+    
+    cnt = dataset.count()
+    """
+    Given a dataset loaded on Spark, return the
+    number of elements.
+    :param dataset: dataset loaded in Spark context
+    :type dataset: a Spark RDD
+    :return: number of elements in the RDD
+    """
+
+    return cnt
+
+
+def get_first_element(dataset):
+    first = dataset.first()
+    """
+    Given a dataset loaded on Spark, return the
+    first element
+    :param dataset: dataset loaded in Spark context
+    :type dataset: a Spark RDD
+    :return: the first element of the RDD
+    """
+
+    return first
+
+
+def get_all_attributes(dataset):
+    attributes = dataset.flatMap(lambda x: x).distinct().collect()
+    """
+    Each element is a dictionary of attributes and their values for a post.
+    Can you find the set of all attributes used throughout the RDD?
+    The function dictionary.keys() gives you the list of attributes of a dictionary.
+    :param dataset: dataset loaded in Spark context
+    :type dataset: a Spark RDD
+    :return: all unique attributes collected in a list
+    """
+
+    return attributes
+
+
+def get_elements_w_same_attributes(dataset):
+    first_key = list(dataset.first().keys())
+    rdd = dataset.filter(lambda x: list(x.keys()) == first_key)
+    return rdd
+    """
+    We see that there are more attributes than just the one used in the first element.
+    This function should return all elements that have the same attributes
+    as the first element.
+
+    :param dataset: dataset loaded in Spark context
+    :type dataset: a Spark RDD
+    :return: an RDD containing only elements with same attributes as the
+    first element
+    """
+
+from datetime import datetime as dt
+def get_min_max_timestamps(dataset):
+    min = dataset.map(lambda x: x['created_at_i']).min()
+    max = dataset.map(lambda x: x['created_at_i']).max()
+    """
+    Find the minimum and maximum timestamp in the dataset
+    :param dataset: dataset loaded in Spark context
+    :type dataset: a Spark RDD
+    :return: min and max timestamp in a tuple object
+    :rtype: tuple
+    """
+
+    return (dt.utcfromtimestamp(min), dt.utcfromtimestamp(max))
+
+def get_bucket(rec, min_timestamp, max_timestamp):
+    min_timestamp  = int(min_timestamp.strftime('%s'))
+    max_timestamp  = int(max_timestamp.strftime('%s'))
+    
+    interval = (max_timestamp - min_timestamp + 1) / 200.0
+    return int((rec['created_at_i'] - min_timestamp)/interval)
+
+def get_number_of_posts_per_bucket(dataset, min_time, max_time):
+    
+    buckets_rdd = dataset.map(lambda x: (get_bucket(x, min_time, max_time),1)).reduceByKey(lambda c1, c2: c1 + c2)
+    """
+    Using the `get_bucket` function defined in the notebook (redefine it in this file), this function should return a
+    new RDD that contains the number of elements that fall within each bucket.
+    :param dataset: dataset loaded in Spark context
+    :type dataset: a Spark RDD
+    :param min_time: Minimum time to consider for buckets (datetime format)
+    :param max_time: Maximum time to consider for buckets (datetime format)
+    :return: an RDD with number of elements per bucket
+    """
+
+    return buckets_rdd
+
+def get_hour(rec):
+    t = dt.utcfromtimestamp(rec['created_at_i'])
+    return t.hour
+    
+def get_number_of_posts_per_hour(dataset):
+    hours_buckets_rdd = dataset.map(lambda x: (get_hour(x),1)).reduceByKey(lambda c1, c2: c1 + c2)
+    """
+    Using the `get_hour` function defined in the notebook (redefine it in this file), this function should return a
+    new RDD that contains the number of elements per hour.
+    :param dataset: dataset loaded in Spark context
+    :type dataset: a Spark RDD
+    :return: an RDD with number of elements per hour
+    """
+
+    return hours_buckets_rdd
+
+
+def get_score_per_hour(dataset):
+    scores_per_hour_rdd = dataset.map(lambda x: (get_hour(x),(x['points'], 1))).reduceByKey(lambda a,b: (a[0]+b[0], a[1]+b[1])).mapValues(lambda v: v[0]/v[1])
+    
+    
+    """
+    The number of points scored by a post is under the attribute `points`.
+    Use it to compute the average score received by submissions for each hour.
+    :param dataset: dataset loaded in Spark context
+    :type dataset: a Spark RDD
+    :return: an RDD with average score per hour
+    """
+
+    return scores_per_hour_rdd
+
+
+def get_proportion_of_scores(dataset):
+    prop_per_hour_rdd = dataset.map(lambda x: (get_hour(x),x['points'])).mapValues(lambda v: (1 if v > 200 else 0,1) ).reduceByKey(lambda a,b: (a[0]+b[0], a[1]+b[1])).mapValues(lambda v: v[0]/v[1])
+    """
+    It may be more useful to look at sucessful posts that get over 200 points.
+    Find the proportion of posts that get above 200 points per hour. 
+    This will be the number of posts with points > 200 divided by the total number of posts at this hour.
+    :param dataset: dataset loaded in Spark context
+    :type dataset: a Spark RDD
+    :return: an RDD with the proportion of scores over 200 per hour
+    """
+
+    return prop_per_hour_rdd
+import re
+def get_words(line):
+    return re.compile('\w+').findall(line)
+
+def get_proportion_of_success(dataset):
+    
+    prop_per_title_length_rdd = dataset.map(lambda x: (len(get_words(x.get('title',''))) , (1 if x['points'] > 200 else 0, 1))).reduceByKey(lambda c1, c2: (c1[0] + c2[0] , c1[1] + c2[1])).mapValues(lambda v: v[0]/v[1])
+    """
+    Using the `get_words` function defined in the notebook to count the
+    number of words in the title of each post, look at the proportion
+    of successful posts for each title length.
+
+    Note: If an entry in the dataset does not have a title, it should
+    be counted as a length of 0.
+
+    :param dataset: dataset loaded in Spark context
+    :type dataset: a Spark RDD
+    :return: an RDD with the proportion of successful post per title length
+    """
+    return prop_per_title_length_rdd
+
+
+
+def get_title_length_distribution(dataset):
+    submissions_per_length_rdd = dataset.map(lambda x: (len(get_words(x.get('title',''))) , 1)).reduceByKey(lambda c1, c2:  c1 + c2)
+    """
+    Count for each title length the number of submissions with that length.
+
+    Note: If an entry in the dataset does not have a title, it should
+    be counted as a length of 0.
+
+    :param dataset: dataset loaded in Spark context
+    :type dataset: a Spark RDD
+    :return: an RDD with the number of submissions per title length
+    """
+    return submissions_per_length_rdd
+
+
+MODULE 7
+MODEL
+
+
+"""This function builds a new model and returns it.
+
+The model should be implemented as a sklearn Pipeline object.
+
+Your pipeline needs to have two steps:
+- preprocessor: a Transformer object that can transform a dataset
+- model: a predictive model object that can be trained and generate predictions
+
+:return: a new instance of your model
+"""
+
+from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.pipeline import Pipeline
+#from sklearn.linear_model import Lasso
+from lightgbm import LGBMClassifier
+#from sklearn.ensemble import GradientBoostingClassifier
+import pandas as pd
+import numpy as np
+from scipy import stats
+
+class Processor(BaseEstimator, TransformerMixin):
+    def fit(self, X, y=None):
+        return self
+        
+
+    def transform(self, X, y=None):
+        categorical = ["Product_Info_2", "Product_Info_3", "Product_Info_6", \
+                       "Product_Info_7", "Employment_Info_2", "Employment_Info_3", "Employment_Info_5", "InsuredInfo_1", \
+                       "InsuredInfo_3", "InsuredInfo_4", "InsuredInfo_6", \
+                       "Insurance_History_1", "Insurance_History_3", "Insurance_History_4", "Insurance_History_7", \
+                       "Insurance_History_8", "Insurance_History_9", "Family_Hist_1", "Medical_History_2", \
+                       "Medical_History_4", "Medical_History_8", \
+                       "Medical_History_9", "Medical_History_12", "Medical_History_13", "Medical_History_14", \
+                       "Medical_History_23", "Medical_History_25", "Medical_History_26", \
+                       "Medical_History_29", \
+                       "Medical_History_33", "Medical_History_34", "Medical_History_36", "Medical_History_37", \
+                       "Medical_History_39", "Medical_History_41"]
+        continuous = ["Product_Info_4", "Ins_Age", "Ht", "Wt", "BMI",
+                      "Employment_Info_1", "Employment_Info_6",
+                      "Insurance_History_5", "Family_Hist_2", "Family_Hist_3", "Family_Hist_4", "Family_Hist_5"]
+        discrete = ["Medical_History_1", "Medical_History_15"]
+        # dummy = ["Medical_Keyword_{}".format(i) for i in range(1, 48)]
+        #categorical_data = X[categorical]
+        continuous_data = X[continuous]
+        discrete_data = X[discrete]
+
+        #categorical_data = categorical_data.applymap(str)
+        #categorical_data = pd.get_dummies(categorical_data)
+
+        for col in continuous:
+            to_process = continuous_data[col]
+            not_missing = to_process[~to_process.isnull()]
+            not_missing = not_missing - np.min(not_missing) + 1e-10
+            res = stats.boxcox(not_missing)
+            to_process[~to_process.isnull()] = res[0]
+
+            mean = np.mean(to_process[~to_process.isnull()])
+            std = to_process[~to_process.isnull()].std()
+            to_process = (to_process - mean) / std
+            to_process[to_process.isnull()] = 0.0
+
+            continuous_data[col] = to_process
+
+        for col in discrete:
+            to_process = discrete_data[col]
+            not_missing = to_process[~to_process.isnull()]
+            not_missing = not_missing - np.min(not_missing) + 1e-10
+            res = stats.boxcox(not_missing)
+            to_process[~to_process.isnull()] = res[0]
+
+            mean = np.mean(to_process[~to_process.isnull()])
+            std = to_process[~to_process.isnull()].std()
+            to_process = (to_process - mean) / std
+            to_process[to_process.isnull()] = 0.0
+
+            discrete_data[col] = to_process
+
+        X = pd.concat([continuous_data, discrete_data], axis=1)
+
+        if y is None:
+            return X
+
+        return X, y
+
+
+def build_model():
+    preprocessor = Processor()
+    model = LGBMClassifier()
+    return Pipeline([("preprocessor", preprocessor), ("model", model)])
+
+
+RUN
+
+import argparse
+import os
+import pickle
+import pandas as pd
+from model import build_model
+
+X_TRAIN_NAME = "X_train.zip"
+Y_TRAIN_NAME = "y_train.zip"
+X_TEST_NAME = "X_test.zip"
+
+DATA_DIR = "data"
+PICKLE_NAME = "model.pickle"
+#test
+
+def train_model():
+    #X = pd.read_csv(os.sep.join([DATA_DIR, X_TRAIN_NAME]))
+
+    X = pd.read_csv('X_train.csv')
+    #y = pd.read_csv(os.sep.join([DATA_DIR, Y_TRAIN_NAME]))
+    y = pd.read_csv('y_train.csv')
+
+    model = build_model()
+    model.fit(X, y.values.ravel())
+
+    # Save to pickle
+    with open(PICKLE_NAME, "wb") as f:
+        pickle.dump(model, f)
+
+
+def test_model():
+    #X = pd.read_csv(os.sep.join([DATA_DIR, X_TEST_NAME]))
+    X = pd.read_csv('X_test.csv')
+
+    # Load pickle
+    with open(PICKLE_NAME, "rb") as f:
+        model = pickle.load(f)
+
+    preds = model.predict(X)
+    print("### Your predictions ###")
+    print(preds)
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="A command line-tool to manage the project."
+    )
+    parser.add_argument(
+        "stage",
+        metavar="stage",
+        type=str,
+        choices=["setup", "train", "test"],
+        help="Stage to run.",
+    )
+
+    stage = parser.parse_args().stage
+
+    if stage == "train":
+        print("Training model...")
+        train_model()
+
+    elif stage == "test":
+        print("Testing model...")
+        test_model()
+
+
+if __name__ == "__main__":
+    main()
+
+MODULE 8
+MODEL
+
+from keras.layers.core import Dense
+from keras.models import Sequential
+from keras.utils import np_utils
+from keras.wrappers.scikit_learn import KerasClassifier
+from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.pipeline import Pipeline
+
+
+class Preprocessor(BaseEstimator, TransformerMixin):
+    def fit(self, X, y=None):
+        return self
+
+    def transform(self, X, y=None):
+        X = X/255.0
+        X = X.reshape(X.shape[0], 784)
+
+        if y is None:
+            return X
+
+        y = np_utils.to_categorical(y, 4)
+        return X, y
+
+
+def keras_builder():
+    model = Sequential()
+    model.add(Dense(16, input_shape=(784,), activation="relu"))
+    model.add(Dense(4, activation="softmax"))
+    model.compile(
+        optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"]
+    )
+    return model
+
+
+def build_model():
+    preprocessor = Preprocessor()
+
+    model = KerasClassifier(build_fn=keras_builder, batch_size=16, epochs=10)
+
+    return Pipeline([("preprocessor", preprocessor), ("model", model)])
+    
+    
+
+RUN
+
+import argparse
+import os
+import pickle
+import numpy as np
+from model import build_model
+
+X_TRAIN_NAME = "X_train.npy"
+Y_TRAIN_NAME = "y_train.npy"
+X_TEST_NAME = "X_test.npy"
+
+DATA_DIR = "data"
+PICKLE_NAME = 'model.pickle'
+
+def train_model():
+    X = np.load(os.sep.join([DATA_DIR, X_TRAIN_NAME]))
+    y = np.load(os.sep.join([DATA_DIR, Y_TRAIN_NAME]))
+
+    model = build_model()
+    model.fit(X, y)
+
+    # Save to pickle
+    with open(PICKLE_NAME, 'wb') as f:
+        pickle.dump(model, f)
+
+
+def test_model():
+    X = np.load(os.sep.join([DATA_DIR, X_TEST_NAME]))
+
+    # Load pickle
+    with open(PICKLE_NAME, 'rb') as f:
+        model = pickle.load(f)
+
+    preds = model.predict(X)
+    print("### Your predictions ###")
+    print(preds)
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="A command line-tool to manage the project.")
+    parser.add_argument('stage',
+                        metavar='stage',
+                        type=str,
+                        choices=['train', 'test'],
+                        help="Stage to run.")
+
+    stage = parser.parse_args().stage
+
+    if stage == "train":
+        print("Training model...")
+        train_model()
+
+    elif stage == "test":
+        print("Testing model...")
+        test_model()
+
+
+if __name__ == "__main__":
+    main()
+
+
+MODULE 9
+MODEL
+
+def build_model():
+    """This function builds a new model and returns it.
+
+    The model should be implemented as a sklearn Pipeline object.
+
+    Your pipeline needs to have two steps:
+    - preprocessor: a Transformer object that can transform a dataset
+    - model: a predictive model object that can be trained and generate predictions
+
+    :return: a new instance of your model
+    """
+    from sklearn.compose import ColumnTransformer
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.naive_bayes import MultinomialNB
+    from sklearn.pipeline import Pipeline
+    from sklearn.linear_model import SGDClassifier
+
+    preprocessor = ColumnTransformer([("processing", TfidfVectorizer(stop_words = 'english'), "text")])
+    return Pipeline([("preprocessor", preprocessor), ("model", SGDClassifier(loss='hinge', penalty='l2',alpha=1e-3, max_iter=100))])
+    #return Pipeline([("preprocessor", preprocessor), ("model", MultinomialNB())])
+
+    #raise NotImplementedError
+
+RUN
+import argparse
+import os
+import pickle
+import pandas as pd
+from model import build_model
+
+X_TRAIN_NAME = "X_train.zip"
+Y_TRAIN_NAME = "y_train.zip"
+X_TEST_NAME = "X_test.zip"
+
+DATA_DIR = "data"
+PICKLE_NAME = "model.pickle"
+
+def train_model():
+    X = pd.read_csv(os.sep.join([DATA_DIR, X_TRAIN_NAME]))
+    y = pd.read_csv(os.sep.join([DATA_DIR, Y_TRAIN_NAME]))
+
+    model = build_model()
+    model.fit(X, y)
+
+    # Save to pickle
+    with open(PICKLE_NAME, "wb") as f:
+        pickle.dump(model, f)
+
+
+def test_model():
+    X = pd.read_csv(os.sep.join([DATA_DIR, X_TEST_NAME]))
+
+    # Load pickle
+    with open(PICKLE_NAME, "rb") as f:
+        model = pickle.load(f)
+
+    preds = model.predict(X)
+    print("### Your predictions ###")
+    print(preds)
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="A command line-tool to manage the project."
+    )
+    parser.add_argument(
+        "stage",
+        metavar="stage",
+        type=str,
+        choices=["train", "test"],
+        help="Stage to run.",
+    )
+
+    stage = parser.parse_args().stage
+
+    if stage == "train":
+        print("Training model...")
+        train_model()
+
+    elif stage == "test":
+        print("Testing model...")
+        test_model()
+
+
+if __name__ == "__main__":
+    main()
